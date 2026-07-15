@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inscrições — Amecomex Admin</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="/admin" class="brand">
+        <span class="brand-mark">A</span>
+        <span class="brand-name">Amecomex</span>
+        <span class="brand-sep"></span>
+        <span class="brand-sub">Admin</span>
+      </a>
+      <nav>
+        <span id="who" class="text-sm text-muted"></span>
+        <a href="/">Página pública</a>
+        <button id="btn-logout" class="ghost sm">Sair</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wide">
+    <div class="dashboard-head">
+      <div>
+        <h1>Inscrições</h1>
+        <p>Gerencie as inscrições recebidas. <span id="total-badge"></span></p>
+      </div>
+      <button class="primary" id="btn-novo">+ Nova inscrição</button>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <input type="search" id="q" placeholder="Buscar por nome, e-mail, CPF ou cidade…" />
+      </div>
+    </div>
+
+    <div id="msg"></div>
+
+    <div id="lista"></div>
+  </main>
+
+  <div class="modal-bg" id="modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-title">Nova inscrição</h3>
+        <p>Preencha os dados abaixo. Campos com <span style="color: hsl(var(--destructive));">*</span> são obrigatórios.</p>
+      </div>
+      <div class="modal-body">
+        <div id="modal-msg"></div>
+        <div id="modal-timestamps" class="text-xs text-muted" style="display:none; margin-bottom: 16px; padding: 10px 12px; background: hsl(var(--muted)); border-radius: calc(var(--radius) - 2px); display:none;"></div>
+        <form id="form-admin" novalidate>
+          <input type="hidden" name="id" />
+
+          <div class="field">
+            <label>Nome Completo <span class="req">*</span></label>
+            <input type="text" name="nomeCompleto" required />
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label>Como prefere ser chamada? <span class="req">*</span></label>
+              <input type="text" name="comoPrefereChamada" required />
+            </div>
+            <div class="field">
+              <label>Data de Nascimento <span class="req">*</span></label>
+              <input type="date" name="dataNascimento" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label>E-mail <span class="req">*</span></label>
+              <input type="email" name="email" required />
+            </div>
+            <div class="field">
+              <label>Celular / WhatsApp <span class="req">*</span></label>
+              <input type="tel" name="celular" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label>RG <span class="req">*</span></label>
+              <input type="text" name="rg" required />
+            </div>
+            <div class="field">
+              <label>CPF <span class="req">*</span></label>
+              <input type="text" name="cpf" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field" style="max-width: 220px;">
+              <label>CEP <span class="req">*</span></label>
+              <input type="text" name="cep" required />
+            </div>
+            <div class="field">
+              <label>Número <span class="req">*</span></label>
+              <input type="text" name="numero" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Logradouro <span class="req">*</span></label>
+            <input type="text" name="logradouro" required />
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label>Complemento</label>
+              <input type="text" name="complemento" />
+            </div>
+            <div class="field">
+              <label>Bairro <span class="req">*</span></label>
+              <input type="text" name="bairro" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label>Cidade <span class="req">*</span></label>
+              <input type="text" name="cidade" required />
+            </div>
+            <div class="field">
+              <label>Estado <span class="req">*</span></label>
+              <select name="estado" required>
+                <option value="">Selecione…</option>
+                <option value="AC">Acre (AC)</option>
+                <option value="AL">Alagoas (AL)</option>
+                <option value="AP">Amapá (AP)</option>
+                <option value="AM">Amazonas (AM)</option>
+                <option value="BA">Bahia (BA)</option>
+                <option value="CE">Ceará (CE)</option>
+                <option value="DF">Distrito Federal (DF)</option>
+                <option value="ES">Espírito Santo (ES)</option>
+                <option value="GO">Goiás (GO)</option>
+                <option value="MA">Maranhão (MA)</option>
+                <option value="MT">Mato Grosso (MT)</option>
+                <option value="MS">Mato Grosso do Sul (MS)</option>
+                <option value="MG">Minas Gerais (MG)</option>
+                <option value="PA">Pará (PA)</option>
+                <option value="PB">Paraíba (PB)</option>
+                <option value="PR">Paraná (PR)</option>
+                <option value="PE">Pernambuco (PE)</option>
+                <option value="PI">Piauí (PI)</option>
+                <option value="RJ">Rio de Janeiro (RJ)</option>
+                <option value="RN">Rio Grande do Norte (RN)</option>
+                <option value="RS">Rio Grande do Sul (RS)</option>
+                <option value="RO">Rondônia (RO)</option>
+                <option value="RR">Roraima (RR)</option>
+                <option value="SC">Santa Catarina (SC)</option>
+                <option value="SP">São Paulo (SP)</option>
+                <option value="SE">Sergipe (SE)</option>
+                <option value="TO">Tocantins (TO)</option>
+                <option value="EX">Não moro no Brasil</option>
+              </select>
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="outline" id="btn-cancelar">Cancelar</button>
+        <button type="submit" class="primary" id="btn-salvar" form="form-admin">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/masks.js"></script>
+  <script src="/admin.js"></script>
+</body>
+</html>

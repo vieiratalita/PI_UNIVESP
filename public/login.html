@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Entrar — Amecomex Admin</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="/" class="brand">
+        <span class="brand-mark">A</span>
+        <span class="brand-name">Amecomex</span>
+        <span class="brand-sep"></span>
+        <span class="brand-sub">Admin</span>
+      </a>
+      <nav>
+        <a href="/">Voltar ao formulário</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="login-wrap">
+    <div>
+      <div class="brand-center">
+        <span class="brand-mark">A</span>
+        <h1>Acesso administrativo</h1>
+        <p class="lead">Entre com suas credenciais para continuar.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-content">
+          <div id="msg"></div>
+          <form id="form-login">
+            <div class="field">
+              <label>Usuário</label>
+              <input type="text" name="username" autocomplete="username" placeholder="admin" required />
+            </div>
+            <div class="field">
+              <label>Senha</label>
+              <input type="password" name="password" autocomplete="current-password" placeholder="••••••••" required />
+            </div>
+            <button type="submit" class="primary btn-block mt-2">Entrar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/login.js"></script>
+</body>
+</html>

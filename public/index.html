@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inscrição — Amecomex</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="/" class="brand">
+        <span class="brand-mark">A</span>
+        <span class="brand-name">Amecomex</span>
+        <span class="brand-sep"></span>
+        <span class="brand-sub">Inscrição</span>
+      </a>
+      <nav>
+        <a href="/login.html">Área administrativa</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <h1>Formulário de Inscrição</h1>
+      <p>Associação de Mulheres Especialistas em Comércio Exterior — você está a um passo de fazer parte da nossa comunidade.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="consentimentos">
+          <p>Autorizo a AMECOMEX quanto à utilização dos meus dados, conforme a Lei Geral de Proteção de Dados Pessoais (LGPD), Lei nº 13.709/2018.</p>
+          <p>Declaro ser maior de 18 anos.</p>
+          <p>Caso não queira que seus dados sejam armazenados, envie um e-mail para amecomexbrasil@gmail.com.</p>
+          <p>Autorizo expressamente a Amecomex Brasil, em caráter gratuito, a utilizar imagens da minha participação em fotos ou filmagens, em materiais internos, externos e mídias eletrônicas.</p>
+        </div>
+
+        <div id="msg"></div>
+
+        <form id="form-inscricao" novalidate style="margin-top: 24px;">
+          <div class="field">
+            <label>Nome Completo <span class="req">*</span></label>
+            <input type="text" name="nomeCompleto" placeholder="Seu nome completo" required />
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label>Como prefere ser chamada? <span class="req">*</span></label>
+              <input type="text" name="comoPrefereChamada" required />
+            </div>
+            <div class="field">
+              <label>Data de Nascimento <span class="req">*</span></label>
+              <input type="date" name="dataNascimento" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label>E-mail <span class="req">*</span></label>
+              <input type="email" name="email" placeholder="voce@exemplo.com" required />
+            </div>
+            <div class="field">
+              <label>Celular / WhatsApp <span class="req">*</span></label>
+              <input type="tel" name="celular" placeholder="(00) 00000-0000" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label>RG <span class="req">*</span></label>
+              <input type="text" name="rg" required />
+            </div>
+            <div class="field">
+              <label>CPF <span class="req">*</span></label>
+              <input type="text" name="cpf" placeholder="000.000.000-00" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field" style="max-width: 220px;">
+              <label>CEP <span class="req">*</span></label>
+              <input type="text" name="cep" placeholder="00000-000" required />
+            </div>
+            <div class="field">
+              <label>Número <span class="req">*</span></label>
+              <input type="text" name="numero" placeholder="123" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Logradouro <span class="req">*</span></label>
+            <input type="text" name="logradouro" placeholder="Preenchido automaticamente pelo CEP" required />
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label>Complemento</label>
+              <input type="text" name="complemento" placeholder="Apto, bloco, sala (opcional)" />
+            </div>
+            <div class="field">
+              <label>Bairro <span class="req">*</span></label>
+              <input type="text" name="bairro" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label>Cidade <span class="req">*</span></label>
+              <input type="text" name="cidade" required />
+            </div>
+            <div class="field">
+              <label>Estado <span class="req">*</span></label>
+              <select name="estado" required>
+                <option value="">Selecione…</option>
+                <option value="AC">Acre (AC)</option>
+                <option value="AL">Alagoas (AL)</option>
+                <option value="AP">Amapá (AP)</option>
+                <option value="AM">Amazonas (AM)</option>
+                <option value="BA">Bahia (BA)</option>
+                <option value="CE">Ceará (CE)</option>
+                <option value="DF">Distrito Federal (DF)</option>
+                <option value="ES">Espírito Santo (ES)</option>
+                <option value="GO">Goiás (GO)</option>
+                <option value="MA">Maranhão (MA)</option>
+                <option value="MT">Mato Grosso (MT)</option>
+                <option value="MS">Mato Grosso do Sul (MS)</option>
+                <option value="MG">Minas Gerais (MG)</option>
+                <option value="PA">Pará (PA)</option>
+                <option value="PB">Paraíba (PB)</option>
+                <option value="PR">Paraná (PR)</option>
+                <option value="PE">Pernambuco (PE)</option>
+                <option value="PI">Piauí (PI)</option>
+                <option value="RJ">Rio de Janeiro (RJ)</option>
+                <option value="RN">Rio Grande do Norte (RN)</option>
+                <option value="RS">Rio Grande do Sul (RS)</option>
+                <option value="RO">Rondônia (RO)</option>
+                <option value="RR">Roraima (RR)</option>
+                <option value="SC">Santa Catarina (SC)</option>
+                <option value="SP">São Paulo (SP)</option>
+                <option value="SE">Sergipe (SE)</option>
+                <option value="TO">Tocantins (TO)</option>
+                <option value="EX">Não moro no Brasil</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="separator"></div>
+
+          <div class="checkbox">
+            <input type="checkbox" id="aceiteLgpd" name="aceiteLgpd" required />
+            <label for="aceiteLgpd">Autorizo o uso dos meus dados conforme a LGPD.</label>
+          </div>
+          <div class="checkbox">
+            <input type="checkbox" id="aceiteMaiorIdade" name="aceiteMaiorIdade" required />
+            <label for="aceiteMaiorIdade">Declaro ser maior de 18 anos.</label>
+          </div>
+          <div class="checkbox">
+            <input type="checkbox" id="aceiteImagem" name="aceiteImagem" />
+            <label for="aceiteImagem">Autorizo o uso de minha imagem em fotos e filmagens.</label>
+          </div>
+        </form>
+      </div>
+
+      <div class="card-footer">
+        <button type="submit" class="primary" id="btn-enviar" form="form-inscricao">Enviar inscrição</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="/masks.js"></script>
+  <script src="/form.js"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inscrição enviada — Amecomex</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .thanks-wrap {
+      min-height: calc(100vh - 56px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+    .thanks-card {
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+    }
+    .thanks-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: hsl(var(--success) / 0.12);
+      color: hsl(var(--success));
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      border: 1px solid hsl(var(--success) / 0.25);
+    }
+    .thanks-card h1 {
+      font-size: 26px;
+      font-weight: 600;
+      margin: 0 0 10px;
+      letter-spacing: -0.02em;
+    }
+    .thanks-card p {
+      color: hsl(var(--muted-foreground));
+      font-size: 15px;
+      line-height: 1.6;
+      margin: 0 0 8px;
+    }
+    .thanks-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .thanks-meta {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid hsl(var(--border));
+      font-size: 13px;
+      color: hsl(var(--muted-foreground));
+    }
+    .thanks-meta a {
+      color: hsl(var(--foreground));
+      text-decoration: underline;
+      text-decoration-color: hsl(var(--border));
+      text-underline-offset: 3px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="/" class="brand">
+        <span class="brand-mark">A</span>
+        <span class="brand-name">Amecomex</span>
+      </a>
+      <nav>
+        <a href="/">Início</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="thanks-wrap">
+    <div class="card thanks-card">
+      <div class="card-content">
+        <div class="thanks-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <h1>Inscrição enviada!</h1>
+        <p>Obrigada por se inscrever na <strong>Amecomex Brasil</strong>.</p>
+        <p>Em breve entraremos em contato pelo e-mail informado. Fique de olho na sua caixa de entrada (e na pasta de spam, por garantia).</p>
+
+        <div class="thanks-actions">
+          <a href="/" class="btn-primary" style="background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); padding: 0 16px; height: 36px; display: inline-flex; align-items: center; border-radius: calc(var(--radius) - 2px); text-decoration: none; font-size: 14px; font-weight: 500;">Voltar ao início</a>
+        </div>
+
+        <div class="thanks-meta">
+          Quer remover seus dados? Envie um e-mail para
+          <a href="mailto:amecomexbrasil@gmail.com">amecomexbrasil@gmail.com</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
