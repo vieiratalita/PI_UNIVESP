@@ -7,21 +7,22 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Ir para o conteúdo principal</a>
   <header>
     <div class="container">
       <a href="/" class="brand">
-        <span class="brand-mark">A</span>
+        <span class="brand-mark" aria-hidden="true">A</span>
         <span class="brand-name">Amecomex</span>
-        <span class="brand-sep"></span>
+        <span class="brand-sep" aria-hidden="true"></span>
         <span class="brand-sub">Inscrição</span>
       </a>
-      <nav>
+      <nav aria-label="Navegação principal">
         <a href="/login.html">Área administrativa</a>
       </nav>
     </div>
   </header>
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <div class="page-header">
       <h1>Formulário de Inscrição</h1>
       <p>Associação de Mulheres Especialistas em Comércio Exterior — você está a um passo de fazer parte da nossa comunidade.</p>
@@ -36,82 +37,85 @@
           <p>Autorizo expressamente a Amecomex Brasil, em caráter gratuito, a utilizar imagens da minha participação em fotos ou filmagens, em materiais internos, externos e mídias eletrônicas.</p>
         </div>
 
-        <div id="msg"></div>
+        <div id="msg" class="message-region"></div>
 
-        <form id="form-inscricao" novalidate style="margin-top: 24px;">
-          <div class="field">
-            <label>Nome Completo <span class="req">*</span></label>
-            <input type="text" name="nomeCompleto" placeholder="Seu nome completo" required />
-          </div>
-
-          <div class="row">
-            <div class="field">
-              <label>Como prefere ser chamada? <span class="req">*</span></label>
-              <input type="text" name="comoPrefereChamada" required />
-            </div>
-            <div class="field">
-              <label>Data de Nascimento <span class="req">*</span></label>
-              <input type="date" name="dataNascimento" required />
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="field">
-              <label>E-mail <span class="req">*</span></label>
-              <input type="email" name="email" placeholder="voce@exemplo.com" required />
-            </div>
-            <div class="field">
-              <label>Celular / WhatsApp <span class="req">*</span></label>
-              <input type="tel" name="celular" placeholder="(00) 00000-0000" required />
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="field">
-              <label>RG <span class="req">*</span></label>
-              <input type="text" name="rg" required />
-            </div>
-            <div class="field">
-              <label>CPF <span class="req">*</span></label>
-              <input type="text" name="cpf" placeholder="000.000.000-00" required />
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="field" style="max-width: 220px;">
-              <label>CEP <span class="req">*</span></label>
-              <input type="text" name="cep" placeholder="00000-000" required />
-            </div>
-            <div class="field">
-              <label>Número <span class="req">*</span></label>
-              <input type="text" name="numero" placeholder="123" required />
-            </div>
-          </div>
+        <form id="form-inscricao" novalidate aria-describedby="form-instructions" style="margin-top: 24px;">
+          <p id="form-instructions" class="form-instructions">Campos marcados com <span aria-hidden="true">*</span> são obrigatórios.</p>
 
           <div class="field">
-            <label>Logradouro <span class="req">*</span></label>
-            <input type="text" name="logradouro" placeholder="Preenchido automaticamente pelo CEP" required />
+            <label for="nomeCompleto">Nome Completo <span class="req" aria-hidden="true">*</span></label>
+            <input id="nomeCompleto" type="text" name="nomeCompleto" autocomplete="name" placeholder="Seu nome completo" required />
           </div>
 
           <div class="row">
             <div class="field">
-              <label>Complemento</label>
-              <input type="text" name="complemento" placeholder="Apto, bloco, sala (opcional)" />
+              <label for="comoPrefereChamada">Como prefere ser chamada? <span class="req" aria-hidden="true">*</span></label>
+              <input id="comoPrefereChamada" type="text" name="comoPrefereChamada" required />
             </div>
             <div class="field">
-              <label>Bairro <span class="req">*</span></label>
-              <input type="text" name="bairro" required />
+              <label for="dataNascimento">Data de Nascimento <span class="req" aria-hidden="true">*</span></label>
+              <input id="dataNascimento" type="date" name="dataNascimento" autocomplete="bday" required />
             </div>
           </div>
 
           <div class="row">
             <div class="field">
-              <label>Cidade <span class="req">*</span></label>
-              <input type="text" name="cidade" required />
+              <label for="email">E-mail <span class="req" aria-hidden="true">*</span></label>
+              <input id="email" type="email" name="email" autocomplete="email" placeholder="voce@exemplo.com" required />
             </div>
             <div class="field">
-              <label>Estado <span class="req">*</span></label>
-              <select name="estado" required>
+              <label for="celular">Celular / WhatsApp <span class="req" aria-hidden="true">*</span></label>
+              <input id="celular" type="tel" name="celular" autocomplete="tel" inputmode="tel" placeholder="(00) 00000-0000" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="rg">RG <span class="req" aria-hidden="true">*</span></label>
+              <input id="rg" type="text" name="rg" autocomplete="off" required />
+            </div>
+            <div class="field">
+              <label for="cpf">CPF <span class="req" aria-hidden="true">*</span></label>
+              <input id="cpf" type="text" name="cpf" autocomplete="off" inputmode="numeric" placeholder="000.000.000-00" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field field-cep">
+              <label for="cep">CEP <span class="req" aria-hidden="true">*</span></label>
+              <input id="cep" type="text" name="cep" autocomplete="postal-code" inputmode="numeric" placeholder="00000-000" aria-describedby="cep-status" required />
+              <span id="cep-status" class="field-hint" data-cep-status role="status"></span>
+            </div>
+            <div class="field">
+              <label for="numero">Número <span class="req" aria-hidden="true">*</span></label>
+              <input id="numero" type="text" name="numero" autocomplete="address-line2" placeholder="123" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="logradouro">Logradouro <span class="req" aria-hidden="true">*</span></label>
+            <input id="logradouro" type="text" name="logradouro" autocomplete="address-line1" placeholder="Preenchido automaticamente pelo CEP" required />
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="complemento">Complemento</label>
+              <input id="complemento" type="text" name="complemento" autocomplete="address-line3" placeholder="Apto, bloco, sala (opcional)" />
+            </div>
+            <div class="field">
+              <label for="bairro">Bairro <span class="req" aria-hidden="true">*</span></label>
+              <input id="bairro" type="text" name="bairro" autocomplete="address-level3" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="cidade">Cidade <span class="req" aria-hidden="true">*</span></label>
+              <input id="cidade" type="text" name="cidade" autocomplete="address-level2" required />
+            </div>
+            <div class="field">
+              <label for="estado">Estado <span class="req" aria-hidden="true">*</span></label>
+              <select id="estado" name="estado" autocomplete="address-level1" required>
                 <option value="">Selecione…</option>
                 <option value="AC">Acre (AC)</option>
                 <option value="AL">Alagoas (AL)</option>
@@ -145,20 +149,21 @@
             </div>
           </div>
 
-          <div class="separator"></div>
-
-          <div class="checkbox">
-            <input type="checkbox" id="aceiteLgpd" name="aceiteLgpd" required />
-            <label for="aceiteLgpd">Autorizo o uso dos meus dados conforme a LGPD.</label>
-          </div>
-          <div class="checkbox">
-            <input type="checkbox" id="aceiteMaiorIdade" name="aceiteMaiorIdade" required />
-            <label for="aceiteMaiorIdade">Declaro ser maior de 18 anos.</label>
-          </div>
-          <div class="checkbox">
-            <input type="checkbox" id="aceiteImagem" name="aceiteImagem" />
-            <label for="aceiteImagem">Autorizo o uso de minha imagem em fotos e filmagens.</label>
-          </div>
+          <fieldset class="consent-fields">
+            <legend>Autorizações e declarações</legend>
+            <div class="checkbox">
+              <input type="checkbox" id="aceiteLgpd" name="aceiteLgpd" required />
+              <label for="aceiteLgpd">Autorizo o uso dos meus dados conforme a LGPD. <span class="req" aria-hidden="true">*</span></label>
+            </div>
+            <div class="checkbox">
+              <input type="checkbox" id="aceiteMaiorIdade" name="aceiteMaiorIdade" required />
+              <label for="aceiteMaiorIdade">Declaro ser maior de 18 anos. <span class="req" aria-hidden="true">*</span></label>
+            </div>
+            <div class="checkbox">
+              <input type="checkbox" id="aceiteImagem" name="aceiteImagem" />
+              <label for="aceiteImagem">Autorizo o uso de minha imagem em fotos e filmagens.</label>
+            </div>
+          </fieldset>
         </form>
       </div>
 

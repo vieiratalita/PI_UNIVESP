@@ -7,46 +7,47 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Ir para o conteúdo principal</a>
   <header>
     <div class="container">
       <a href="/" class="brand">
-        <span class="brand-mark">A</span>
+        <span class="brand-mark" aria-hidden="true">A</span>
         <span class="brand-name">Amecomex</span>
-        <span class="brand-sep"></span>
+        <span class="brand-sep" aria-hidden="true"></span>
         <span class="brand-sub">Admin</span>
       </a>
-      <nav>
+      <nav aria-label="Navegação principal">
         <a href="/">Voltar ao formulário</a>
       </nav>
     </div>
   </header>
 
-  <div class="login-wrap">
+  <main id="main-content" class="login-wrap" tabindex="-1">
     <div>
       <div class="brand-center">
-        <span class="brand-mark">A</span>
+        <span class="brand-mark" aria-hidden="true">A</span>
         <h1>Acesso administrativo</h1>
         <p class="lead">Entre com suas credenciais para continuar.</p>
       </div>
 
       <div class="card">
         <div class="card-content">
-          <div id="msg"></div>
+          <div id="msg" class="message-region"></div>
           <form id="form-login">
             <div class="field">
-              <label>Usuário</label>
-              <input type="text" name="username" autocomplete="username" placeholder="admin" required />
+              <label for="username">Usuário</label>
+              <input id="username" type="text" name="username" autocomplete="username" placeholder="admin" required />
             </div>
             <div class="field">
-              <label>Senha</label>
-              <input type="password" name="password" autocomplete="current-password" placeholder="••••••••" required />
+              <label for="password">Senha</label>
+              <input id="password" type="password" name="password" autocomplete="current-password" placeholder="••••••••" required />
             </div>
-            <button type="submit" class="primary btn-block mt-2">Entrar</button>
+            <button type="submit" class="primary btn-block mt-2" id="btn-login">Entrar</button>
           </form>
         </div>
       </div>
     </div>
-  </div>
+  </main>
 
   <script src="/login.js"></script>
 </body>

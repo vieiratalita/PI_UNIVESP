@@ -21,8 +21,8 @@ Aplicação Node.js que substitui o antigo formulário Google da **Associação 
 
 ## 2. Estrutura de pastas
 
-```
-TCC/
+```text
+PI_UNIVESP/
 ├── prisma/
 │   ├── schema.prisma          # modelos Inscricao e Admin
 │   ├── seed.js                # cria o admin inicial
@@ -45,8 +45,10 @@ TCC/
 │       ├── inscricaoService.js
 │       └── authService.js
 ├── server.js                  # rotas Express + sessão
-├── .env                       # DATABASE_URL, SESSION_SECRET, PORT
+├── .env                       # banco, sessão, porta e credenciais do seed
 ├── package.json
+├── README.md                  # instalação e início rápido
+├── APRESENTACAO.md            # material de apoio para apresentação
 └── DOCUMENTACAO.md            # este arquivo
 ```
 
@@ -146,6 +148,8 @@ Caso futuramente seja necessário rastrear *qual* admin editou cada inscrição,
 | `express-session`          | Sessão em cookie HTTP-only, `sameSite: 'lax'`, expira em 8 horas.                               |
 | `express.static('public')` | Serve os HTML/CSS/JS do `public/`.                                                              |
 
+Como nenhum `store` externo foi configurado, `express-session` usa o `MemoryStore` padrão. Isso atende ao desenvolvimento local, mas não deve ser usado em produção: as sessões são perdidas ao reiniciar o processo e o armazenamento não foi projetado para múltiplas instâncias.
+
 ### 4.2 Helpers locais
 
 | Helper            | Finalidade                                                                                                          |
@@ -233,7 +237,7 @@ Classes de erro: `ValidationError(status=400)`, `ConflictError(status=409)`, `No
 | Função                       | Equivale a                                                                  |
 | ---------------------------- | --------------------------------------------------------------------------- |
 | `buscarPorUsername(username)`| `prisma.admin.findUnique({ where: { username } })`                          |
-| `criar({ username, hash })`  | `prisma.admin.create({ data: { username, passwordHash } })`                 |
+| `criar({ username, passwordHash })` | `prisma.admin.create({ data: { username, passwordHash } })`          |
 
 ---
 
@@ -246,41 +250,199 @@ Classes de erro: `ValidationError(status=400)`, `ConflictError(status=409)`, `No
 | `index.html`     | `/`              | Formulário público com todos os campos do antigo Google Form. |
 | `obrigado.html`  | `/obrigado.html` | Confirmação visual após envio (redirecionada via `form.js`). |
 | `login.html`     | `/login.html`    | Login admin.                                                  |
-| `admin.html`     | `/admin`         | Lista + CRUD em modal.                                        |
+| `admin.html`     | `/admin`         | Lista + CRUD em diálogo nativo.                               |
 
 ### 7.2 Scripts
 
-| Arquivo       | Funções principais                                                                                                                                                                |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `masks.js`    | `maskCPF`, `maskRG`, `maskTelefone`, `maskCEP` — formatadores em tempo real. `attachMasks(form)`, `formatarValoresExistentes(form)`, `buscarCep`, `attachCepLookup(form)`.         |
-| `form.js`     | Coleta payload, envia para `POST /api/inscricoes`, redireciona para `/obrigado.html` em sucesso. Liga/desliga o botão "Enviar" conforme os checkboxes de LGPD e maioridade.        |
-| `login.js`    | Envia credenciais para `POST /api/auth/login` e redireciona para `/admin` em sucesso.                                                                                              |
-| `admin.js`    | `carregarSessao`, `carregarLista`, `renderizar`, `abrirModal`, `fecharModal`, `coletarPayload`, `formatarDataHora`. Exibe `createdAt` e `updatedAt` na tabela e no header do modal.|
+| Arquivo       | Funções principais |
+| ------------- | ------------------ |
+| `masks.js`    | Formata CPF, RG, telefone e CEP; consulta o ViaCEP; anuncia o estado da consulta; preenche o endereço sem deslocar o foco. |
+| `form.js`     | Valida o formulário público, relaciona erros aos campos, move o foco para o primeiro inválido, envia `POST /api/inscricoes` e redireciona em sucesso. |
+| `login.js`    | Envia credenciais para `POST /api/auth/login`, comunica erro/carregamento e redireciona para `/admin` em sucesso. |
+| `admin.js`    | Verifica sessão, busca e renderiza registros, constrói a tabela semântica, controla o diálogo nativo e executa o CRUD administrativo. |
 
 ### 7.3 Integração ViaCEP
 
-Em `masks.js`, `attachCepLookup(form)` ouve `blur` e `input` do campo `cep`. Quando há 8 dígitos, faz `GET https://viacep.com.br/ws/{cep}/json/` e preenche `logradouro`, `bairro`, `cidade` e `estado`. Falhas são silenciosas para não bloquear o preenchimento manual.
+Em `masks.js`, `attachCepLookup(form)` ouve `blur` e `input` do campo `cep`. Quando há 8 dígitos, faz `GET https://viacep.com.br/ws/{cep}/json/` e preenche `logradouro`, `bairro`, `cidade` e `estado`.
+
+O estado da consulta é publicado em uma região `role="status"`: consultando, endereço encontrado, CEP inexistente ou falha de conexão. Em qualquer falha, os campos continuam editáveis para preenchimento manual. O preenchimento automático dispara eventos `input` e `change`, permitindo que erros antigos sejam removidos, e não muda o foco de forma inesperada.
 
 ### 7.4 Design
 
-CSS aplica tokens HSL no padrão **shadcn/ui** (`--background`, `--foreground`, `--primary`, `--ring`, etc.), raio padrão `0.5rem`, ring de foco com offset, modal com `backdrop-filter: blur(4px)`. Sem framework — só Inter via Google Fonts.
+CSS aplica tokens HSL no padrão **shadcn/ui** (`--background`, `--foreground`, `--primary`, `--ring`, etc.), raio padrão `0.5rem`, indicador de foco sólido, diálogo com `backdrop-filter: blur(4px)`, reflow responsivo e suporte a `prefers-reduced-motion`. Não há framework ou etapa de build; a fonte Inter é carregada pelo Google Fonts, com fallback para fontes do sistema.
 
 ---
 
-## 8. Como executar
+### 7.5 Envio de e-mail
+
+O sistema **não envia e-mails atualmente**. O endereço informado é validado e armazenado junto à inscrição, e a página `obrigado.html` apenas comunica que a associação poderá entrar em contato posteriormente.
+
+Não há Nodemailer, servidor SMTP, API transacional ou fila de envio configurada. Uma implementação futura precisaria ser adicionada ao backend depois da criação bem-sucedida da inscrição, com tratamento de falhas que não provoque perda do cadastro.
+
+---
+
+## 8. Acessibilidade
+
+As melhorias de acessibilidade estão concentradas na camada de interface. O backend, as regras de negócio, o schema Prisma e os contratos de API permaneceram inalterados.
+
+A estratégia de implementação segue esta prioridade:
+
+1. HTML nativo e semântico;
+2. CSS para foco, contraste, legibilidade e reflow;
+3. JavaScript para mensagens dinâmicas e gerenciamento previsível do foco;
+4. ARIA apenas quando o HTML nativo não comunica sozinho um estado dinâmico.
+
+### 8.1 Estrutura e nomes acessíveis
+
+- todas as páginas possuem `header`, `nav` e `main`;
+- um link “Ir para o conteúdo principal” permite ignorar o cabeçalho repetido;
+- todos os campos visíveis possuem `<label for="...">` associado a um `id`;
+- placeholders são apenas exemplos e não substituem os labels;
+- campos obrigatórios mantêm `required` e indicação visual por asterisco;
+- os consentimentos públicos são agrupados por `<fieldset>` e `<legend>`;
+- elementos decorativos da marca e SVGs sem conteúdo informativo usam `aria-hidden="true"`;
+- a hierarquia de títulos parte de um `h1` por página e usa níveis subordinados para diálogo e estados vazios.
+
+### 8.2 Validação e mensagens
+
+Os formulários público e administrativo usam validação controlada pelo JavaScript para apresentar mensagens consistentes com os erros do backend.
+
+Fluxo de uma tentativa inválida:
+
+```text
+Envio do formulário
+        ↓
+Validação dos controles nativos
+        ↓
+Mensagem específica ao lado de cada campo
+        ↓
+aria-invalid="true" no controle
+        ↓
+aria-describedby liga controle e mensagem
+        ↓
+Foco no primeiro campo inválido
+```
+
+Erros urgentes usam `role="alert"`; sucesso, carregamento, quantidade de resultados e consulta de CEP usam `role="status"`. Durante requisições, formulário e botão recebem `aria-busy`, o texto do botão muda e envios repetidos são temporariamente bloqueados.
+
+O botão público permanece alcançável antes dos consentimentos. Assim, uma pessoa que navega por teclado pode tentar enviar e receber uma explicação específica, em vez de encontrar um botão desabilitado e sem feedback.
+
+As mensagens retornadas pela API são interpretadas no frontend e associadas aos campos correspondentes. Essa opção preserva o formato atual das respostas e evita alteração desnecessária dos contratos do backend.
+
+### 8.3 Teclado e foco
+
+- não há `tabindex` positivo;
+- links e botões usam elementos HTML nativos;
+- todos os controles interativos têm indicador de foco sólido de 3 px;
+- `scroll-margin-top` evita que o cabeçalho fixo esconda um elemento focado;
+- a ordem de tabulação segue a ordem lógica do DOM;
+- erros movem o foco para um destino previsível;
+- a preferência `prefers-reduced-motion` reduz animações e rolagem suave.
+
+### 8.4 Diálogo administrativo
+
+O formulário de criação e edição usa `<dialog>` aberto por `showModal()`. O próprio navegador fornece a semântica modal, coloca o diálogo na top layer e impede a interação com o conteúdo de fundo.
+
+Comportamentos implementados:
+
+- `aria-labelledby` associa o diálogo ao título;
+- `aria-describedby` associa as instruções;
+- o foco inicial vai para o campo Nome Completo;
+- Tab e Shift+Tab permanecem no contexto modal;
+- Escape fecha o diálogo;
+- Cancelar e clique fora também fecham;
+- ao fechar, o foco retorna ao elemento que abriu o diálogo.
+
+Foi preferido `<dialog>` a uma `div` com `role="dialog"`, pois a alternativa exigiria implementar manualmente isolamento do fundo e contenção de foco.
+
+### 8.5 Busca e tabela administrativa
+
+- a busca possui label visualmente oculto e não depende do placeholder;
+- a quantidade de resultados é uma região de status;
+- a listagem usa `<table>` com `<caption>`;
+- cabeçalhos de coluna usam `scope="col"`;
+- o nome da inscrita é o cabeçalho da linha com `scope="row"`;
+- a coluna final possui o título “Ações”;
+- botões repetidos incluem o registro no nome acessível, por exemplo “Editar inscrição de Maria”;
+- a tabela fica em uma região rolável por teclado quando não cabe na largura disponível.
+
+### 8.6 Contraste, zoom e reflow
+
+- cores de erro e sucesso foram escurecidas para manter contraste em fundo claro;
+- placeholders e textos secundários mantêm contraste de texto AA;
+- bordas necessárias para identificar campos foram reforçadas;
+- campos e botões usam altura mínima, permitindo crescimento quando o texto aumenta;
+- linhas com duas colunas passam para uma coluna em telas estreitas;
+- o diálogo respeita a altura da viewport e mantém o corpo rolável;
+- a tabela preserva os dados por rolagem horizontal, em vez de cortar colunas.
+
+Contrastes medidos durante a validação:
+
+| Elemento | Relação de contraste |
+| -------- | -------------------- |
+| Texto principal em fundo branco | 19,9:1 |
+| Texto secundário e placeholder | 4,83:1 |
+| Texto de erro | 6,48:1 |
+
+### 8.7 Critérios WCAG 2.2 relacionados
+
+| Critério | Aplicação no projeto |
+| -------- | -------------------- |
+| 1.3.1 — Informações e relações | Labels, fieldset, títulos e tabela semântica. |
+| 1.4.3 — Contraste mínimo | Textos, placeholders e erros revisados. |
+| 1.4.10 — Reflow | Formulário e diálogo responsivos. |
+| 2.1.1 — Teclado | Controles e diálogo operáveis sem mouse. |
+| 2.4.1 — Ignorar blocos | Link para o conteúdo principal. |
+| 2.4.3 — Ordem do foco | Ordem lógica e foco previsível após erros. |
+| 2.4.7 — Foco visível | Indicador consistente em todos os controles. |
+| 3.3.1 — Identificação de erros | Mensagem textual e estado inválido. |
+| 3.3.2 — Labels ou instruções | Labels persistentes e indicação de obrigatoriedade. |
+| 4.1.2 — Nome, função e valor | Controles nomeados e diálogo nativo. |
+| 4.1.3 — Mensagens de status | Erros, sucesso, busca, carregamento e CEP anunciados. |
+
+### 8.8 Alternativas não adotadas
+
+| Alternativa | Motivo para não aplicar |
+| ----------- | ----------------------- |
+| Overlay ou barra de acessibilidade | Não corrige a semântica e pode conflitar com tecnologias assistivas. |
+| Biblioteca de componentes | HTML nativo já atende aos controles existentes, sem adicionar dependências. |
+| Reescrita em outro framework | Os problemas eram locais e corrigíveis na stack atual. |
+| Focus trap completo em JavaScript | O `<dialog>` nativo já oferece o comportamento modal necessário. |
+| Mudança dos erros da API | A interface consegue associar as respostas atuais aos campos sem quebrar contratos. |
+
+---
+
+## 9. Como executar
+
+### 9.1 Pré-requisitos
+
+- Node.js 20 ou superior recomendado;
+- npm;
+- acesso à internet para instalar dependências, carregar a fonte e consultar o ViaCEP.
+
+### 9.2 Instalação e configuração
 
 ```bash
-# 1. dependências
-npm install
+# 1. instala exatamente as versões do package-lock.json
+npm ci
 
-# 2. cria o banco SQLite + Prisma Client
-npx prisma db push
+# 2. gera o Prisma Client
+npm run db:generate
 
-# 3. cria o admin inicial (usuário admin / senha admin123)
-node prisma/seed.js
+# 3. sincroniza o schema e cria o banco SQLite
+npm run db:push
 
-# 4. sobe o servidor
-node server.js
+# 4. cria o administrador inicial
+npm run seed
+
+# 5. sobe o servidor
+npm start
+```
+
+Para desenvolvimento com reinício automático do servidor:
+
+```bash
+npm run dev
 ```
 
 Acesso:
@@ -291,15 +453,70 @@ Acesso:
 
 Variáveis em `.env`:
 
-```
+```env
 DATABASE_URL="file:./dev.db"
 SESSION_SECRET="troque-este-segredo-em-producao"
 PORT=3000
+ADMIN_USER="admin"
+ADMIN_PASS="troque-esta-senha"
 ```
+
+`DATABASE_URL` é necessária para o Prisma. Se `ADMIN_USER` e `ADMIN_PASS` forem omitidas, o seed usa `admin` e `admin123`.
+
+O seed cria o administrador somente quando o username ainda não existe. Alterar `ADMIN_PASS` e executar o seed novamente não troca a senha de um registro existente.
+
+O arquivo `.env`, o banco `prisma/dev.db` e seu journal estão no `.gitignore` e não devem ser versionados.
+
+### 9.3 Scripts disponíveis
+
+| Comando | Finalidade |
+| ------- | ---------- |
+| `npm start` | Inicia o servidor. |
+| `npm run dev` | Inicia com `node --watch`. |
+| `npm run db:generate` | Gera o Prisma Client. |
+| `npm run db:push` | Sincroniza o schema com o banco. |
+| `npm run seed` | Cria o administrador inicial. |
 
 ---
 
-## 9. Roadmap
+## 10. Validação e testes
+
+O projeto ainda não possui scripts automatizados de teste, lint ou auditoria de acessibilidade. A validação da implementação atual incluiu:
+
+- análise sintática dos quatro scripts do frontend com `node --check`;
+- busca estática por campos sem labels, IDs ausentes, `tabindex` positivo e elementos não semânticos simulando botões;
+- inspeção da árvore de acessibilidade das quatro páginas;
+- envio inválido do formulário público, com foco e mensagens associados;
+- login, busca e CRUD administrativo com dados sintéticos;
+- abertura do diálogo, foco inicial, Escape e retorno do foco;
+- reflow em viewport de 320 × 640 pixels;
+- medição de contraste dos textos principais, secundários e de erro;
+- inspeção do console do navegador sem erros ou warnings.
+
+Verificação sintática reproduzível:
+
+```bash
+node --check public/form.js
+node --check public/login.js
+node --check public/admin.js
+node --check public/masks.js
+```
+
+Roteiro manual recomendado após mudanças:
+
+1. percorrer o formulário com Tab e Shift+Tab;
+2. enviar com campos vazios e confirmar o foco no primeiro erro;
+3. corrigir um campo e verificar a remoção do estado inválido;
+4. testar consulta de CEP e preenchimento manual após falha;
+5. abrir o diálogo administrativo, navegar dentro dele e fechar com Escape;
+6. confirmar o retorno do foco ao botão de origem;
+7. usar a busca e verificar o anúncio da quantidade de resultados;
+8. testar zoom real de 200%, aumento do texto e modo de alto contraste;
+9. realizar ao menos uma rodada com NVDA, JAWS, VoiceOver ou TalkBack.
+
+---
+
+## 11. Roadmap
 
 Sugestões priorizadas para próximas iterações:
 
@@ -308,8 +525,8 @@ Sugestões priorizadas para próximas iterações:
 - **Validação de CPF no backend** com algoritmo de dígito verificador (atualmente só formata, não valida).
 - **Trocar senha do admin pela UI** (rota `PUT /api/auth/password`).
 - **Re-aplicar `@unique` em `email` e `cpf`** se a regra do negócio confirmar que duplicatas devem ser bloqueadas.
-- **Indicador visual de loading** no campo CEP enquanto o ViaCEP responde.
 - **Paginação** em `GET /api/admin/inscricoes` (`?page=&pageSize=`).
+- **Testes automatizados de acessibilidade** no fluxo público e administrativo.
 
 ### Médio prazo
 
@@ -331,10 +548,13 @@ Sugestões priorizadas para próximas iterações:
 
 ---
 
-## 10. Decisões de arquitetura
+## 12. Decisões de arquitetura
 
 - **Sem build do frontend**: HTML/CSS/JS puro entregue por `express.static`. Reduz fricção para um projeto pequeno.
 - **Três camadas no backend**: rotas finas em `server.js`, regras em services, acesso a dados em repositories. Trocar Prisma por outro ORM exige tocar só nos repositories.
 - **`.env` carregado manualmente** em `server.js` e `seed.js` para não exigir `dotenv` como dependência.
 - **Senha do admin via bcrypt** com cost 10 — equilíbrio entre segurança e velocidade.
 - **Aceites preservados em update**: o service só sobrescreve `aceiteLgpd/aceiteMaiorIdade/aceiteImagem` se eles vierem no payload; o admin não os envia, garantindo que o consentimento original do cliente nunca seja alterado pelo painel.
+- **Acessibilidade sem biblioteca adicional**: elementos semânticos nativos, CSS e JavaScript existente cobrem os requisitos sem overlay ou framework de componentes.
+- **Diálogo nativo**: `<dialog>` com `showModal()` reduz código manual de foco e mantém o comportamento esperado de teclado.
+- **Contratos do backend preservados**: mensagens existentes da API são associadas aos campos no frontend, evitando mudanças incompatíveis.

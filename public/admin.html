@@ -7,15 +7,16 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Ir para o conteúdo principal</a>
   <header>
     <div class="container">
       <a href="/admin" class="brand">
-        <span class="brand-mark">A</span>
+        <span class="brand-mark" aria-hidden="true">A</span>
         <span class="brand-name">Amecomex</span>
-        <span class="brand-sep"></span>
+        <span class="brand-sep" aria-hidden="true"></span>
         <span class="brand-sub">Admin</span>
       </a>
-      <nav>
+      <nav aria-label="Navegação principal">
         <span id="who" class="text-sm text-muted"></span>
         <a href="/">Página pública</a>
         <button id="btn-logout" class="ghost sm">Sair</button>
@@ -23,111 +24,112 @@
     </div>
   </header>
 
-  <main class="wide">
+  <main id="main-content" class="wide" tabindex="-1">
     <div class="dashboard-head">
       <div>
         <h1>Inscrições</h1>
-        <p>Gerencie as inscrições recebidas. <span id="total-badge"></span></p>
+        <p>Gerencie as inscrições recebidas. <span id="total-badge" role="status"></span></p>
       </div>
       <button class="primary" id="btn-novo">+ Nova inscrição</button>
     </div>
 
     <div class="toolbar">
       <div class="search-wrap">
-        <input type="search" id="q" placeholder="Buscar por nome, e-mail, CPF ou cidade…" />
+        <label for="q" class="sr-only">Buscar inscrições</label>
+        <input type="search" id="q" placeholder="Buscar por nome, e-mail, CPF ou cidade…" autocomplete="off" />
       </div>
     </div>
 
-    <div id="msg"></div>
+    <div id="msg" class="message-region"></div>
 
-    <div id="lista"></div>
+    <div id="lista" aria-busy="true"></div>
   </main>
 
-  <div class="modal-bg" id="modal">
-    <div class="modal">
+  <dialog class="modal" id="modal" aria-labelledby="modal-title" aria-describedby="modal-description">
       <div class="modal-header">
-        <h3 id="modal-title">Nova inscrição</h3>
-        <p>Preencha os dados abaixo. Campos com <span style="color: hsl(var(--destructive));">*</span> são obrigatórios.</p>
+        <h2 id="modal-title">Nova inscrição</h2>
+        <p id="modal-description">Preencha os dados abaixo. Campos marcados com <span aria-hidden="true">*</span> são obrigatórios.</p>
       </div>
       <div class="modal-body">
-        <div id="modal-msg"></div>
+        <div id="modal-msg" class="message-region"></div>
         <div id="modal-timestamps" class="text-xs text-muted" style="display:none; margin-bottom: 16px; padding: 10px 12px; background: hsl(var(--muted)); border-radius: calc(var(--radius) - 2px); display:none;"></div>
         <form id="form-admin" novalidate>
           <input type="hidden" name="id" />
 
           <div class="field">
-            <label>Nome Completo <span class="req">*</span></label>
-            <input type="text" name="nomeCompleto" required />
+            <label for="admin-nomeCompleto">Nome Completo <span class="req" aria-hidden="true">*</span></label>
+            <input id="admin-nomeCompleto" type="text" name="nomeCompleto" autocomplete="name" required />
           </div>
 
           <div class="row">
             <div class="field">
-              <label>Como prefere ser chamada? <span class="req">*</span></label>
-              <input type="text" name="comoPrefereChamada" required />
+              <label for="admin-comoPrefereChamada">Como prefere ser chamada? <span class="req" aria-hidden="true">*</span></label>
+              <input id="admin-comoPrefereChamada" type="text" name="comoPrefereChamada" required />
             </div>
             <div class="field">
-              <label>Data de Nascimento <span class="req">*</span></label>
-              <input type="date" name="dataNascimento" required />
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="field">
-              <label>E-mail <span class="req">*</span></label>
-              <input type="email" name="email" required />
-            </div>
-            <div class="field">
-              <label>Celular / WhatsApp <span class="req">*</span></label>
-              <input type="tel" name="celular" required />
+              <label for="admin-dataNascimento">Data de Nascimento <span class="req" aria-hidden="true">*</span></label>
+              <input id="admin-dataNascimento" type="date" name="dataNascimento" autocomplete="bday" required />
             </div>
           </div>
 
           <div class="row">
             <div class="field">
-              <label>RG <span class="req">*</span></label>
-              <input type="text" name="rg" required />
+              <label for="admin-email">E-mail <span class="req" aria-hidden="true">*</span></label>
+              <input id="admin-email" type="email" name="email" autocomplete="email" required />
             </div>
             <div class="field">
-              <label>CPF <span class="req">*</span></label>
-              <input type="text" name="cpf" required />
+              <label for="admin-celular">Celular / WhatsApp <span class="req" aria-hidden="true">*</span></label>
+              <input id="admin-celular" type="tel" name="celular" autocomplete="tel" inputmode="tel" required />
             </div>
           </div>
 
           <div class="row">
-            <div class="field" style="max-width: 220px;">
-              <label>CEP <span class="req">*</span></label>
-              <input type="text" name="cep" required />
+            <div class="field">
+              <label for="admin-rg">RG <span class="req" aria-hidden="true">*</span></label>
+              <input id="admin-rg" type="text" name="rg" autocomplete="off" required />
             </div>
             <div class="field">
-              <label>Número <span class="req">*</span></label>
-              <input type="text" name="numero" required />
+              <label for="admin-cpf">CPF <span class="req" aria-hidden="true">*</span></label>
+              <input id="admin-cpf" type="text" name="cpf" autocomplete="off" inputmode="numeric" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field field-cep">
+              <label for="admin-cep">CEP <span class="req" aria-hidden="true">*</span></label>
+              <input id="admin-cep" type="text" name="cep" autocomplete="postal-code" inputmode="numeric" aria-describedby="admin-cep-status" required />
+              <span id="admin-cep-status" class="field-hint" data-cep-status role="status"></span>
+            </div>
+            <div class="field">
+              <label for="admin-numero">Número <span class="req" aria-hidden="true">*</span></label>
+              <input id="admin-numero" type="text" name="numero" autocomplete="address-line2" required />
             </div>
           </div>
 
           <div class="field">
-            <label>Logradouro <span class="req">*</span></label>
-            <input type="text" name="logradouro" required />
+            <label for="admin-logradouro">Logradouro <span class="req" aria-hidden="true">*</span></label>
+            <input id="admin-logradouro" type="text" name="logradouro" autocomplete="address-line1" required />
           </div>
 
           <div class="row">
             <div class="field">
-              <label>Complemento</label>
-              <input type="text" name="complemento" />
+              <label for="admin-complemento">Complemento</label>
+              <input id="admin-complemento" type="text" name="complemento" autocomplete="address-line3" />
             </div>
             <div class="field">
-              <label>Bairro <span class="req">*</span></label>
-              <input type="text" name="bairro" required />
+              <label for="admin-bairro">Bairro <span class="req" aria-hidden="true">*</span></label>
+              <input id="admin-bairro" type="text" name="bairro" autocomplete="address-level3" required />
             </div>
           </div>
 
           <div class="row">
             <div class="field">
-              <label>Cidade <span class="req">*</span></label>
-              <input type="text" name="cidade" required />
+              <label for="admin-cidade">Cidade <span class="req" aria-hidden="true">*</span></label>
+              <input id="admin-cidade" type="text" name="cidade" autocomplete="address-level2" required />
             </div>
             <div class="field">
-              <label>Estado <span class="req">*</span></label>
-              <select name="estado" required>
+              <label for="admin-estado">Estado <span class="req" aria-hidden="true">*</span></label>
+              <select id="admin-estado" name="estado" autocomplete="address-level1" required>
                 <option value="">Selecione…</option>
                 <option value="AC">Acre (AC)</option>
                 <option value="AL">Alagoas (AL)</option>
@@ -167,8 +169,7 @@
         <button type="button" class="outline" id="btn-cancelar">Cancelar</button>
         <button type="submit" class="primary" id="btn-salvar" form="form-admin">Salvar</button>
       </div>
-    </div>
-  </div>
+  </dialog>
 
   <script src="/masks.js"></script>
   <script src="/admin.js"></script>

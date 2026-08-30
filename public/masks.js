@@ -64,20 +64,34 @@ async function buscarCep(cep, form) {
   const digits = (cep || '').replace(/\D/g, '');
   if (digits.length !== 8) return;
   const cepInput = form.elements.cep;
+  const status = form.querySelector('[data-cep-status]');
   if (cepInput) cepInput.dataset.loading = '1';
+  if (status) status.textContent = 'Consultando CEP…';
   try {
     const r = await fetch(`https://viacep.com.br/ws/${digits}/json/`);
-    if (!r.ok) return;
+    if (!r.ok) {
+      if (status) status.textContent = 'Não foi possível consultar o CEP. Preencha o endereço manualmente.';
+      return;
+    }
     const data = await r.json();
-    if (data.erro) return;
-    if (form.elements.logradouro) form.elements.logradouro.value = data.logradouro || '';
-    if (form.elements.bairro)     form.elements.bairro.value     = data.bairro     || '';
-    if (form.elements.cidade)     form.elements.cidade.value     = data.localidade || '';
-    if (form.elements.estado && data.uf) form.elements.estado.value = data.uf;
-    const numeroEl = form.elements.numero;
-    if (numeroEl && !numeroEl.value) numeroEl.focus();
+    if (data.erro) {
+      if (status) status.textContent = 'CEP não encontrado. Preencha o endereço manualmente.';
+      return;
+    }
+    const preencher = (nome, valor) => {
+      const campo = form.elements[nome];
+      if (!campo || !valor) return;
+      campo.value = valor;
+      campo.dispatchEvent(new Event('input', { bubbles: true }));
+      campo.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+    preencher('logradouro', data.logradouro);
+    preencher('bairro', data.bairro);
+    preencher('cidade', data.localidade);
+    preencher('estado', data.uf);
+    if (status) status.textContent = 'Endereço preenchido com os dados encontrados para o CEP.';
   } catch {
-    /* falha silenciosa: usuário pode digitar manualmente */
+    if (status) status.textContent = 'Falha de conexão ao consultar o CEP. Preencha o endereço manualmente.';
   } finally {
     if (cepInput) delete cepInput.dataset.loading;
   }
@@ -89,6 +103,8 @@ function attachCepLookup(form) {
   const handler = () => buscarCep(cepEl.value, form);
   cepEl.addEventListener('blur', handler);
   cepEl.addEventListener('input', () => {
+    const status = form.querySelector('[data-cep-status]');
+    if (status && (cepEl.value || '').replace(/\D/g, '').length < 8) status.textContent = '';
     if ((cepEl.value || '').replace(/\D/g, '').length === 8) handler();
   });
 }
